@@ -6,7 +6,7 @@ let newTodoInput;
 let saveButton = document.getElementById("newtodobutton");
 let todoList = document.getElementById("todolist");
 let clear = document.getElementById("clearbutton");
-
+let readyToAdd = false;
 
 //----------------------- on button press function -----------------------
 saveButton.addEventListener("click", function(){
@@ -17,6 +17,10 @@ saveButton.addEventListener("click", function(){
     if (!newTodoInput) {
         return;
     }
+    if (!readyToAdd) {
+        alert("it needs to be atleast 5 characters");
+        return;
+    }
 
     //adds value to localstorage
     todoItems.push(newTodoInput);
@@ -25,7 +29,7 @@ saveButton.addEventListener("click", function(){
 });
 
 
-//----------------------- loads the todolist on load aswell as logic for removal -----------------------
+//----------------------- loads the todolist on load -----------------------
 window.addEventListener("load", function() { 
 
     //gets list of items as a array, needs json parse since localstorage does not store arrays
@@ -84,4 +88,17 @@ window.onload = function() {
     });
 }
 
-//test for branch
+
+//----------------------- inputSizeCounter ----------------------
+
+//checks if input lenght is 5 or above
+document.getElementById("newtodo").addEventListener("input", function() {
+    let input = this.value;
+    console.log(input);
+    if(5 > input.length) {
+        readyToAdd = false;
+    }
+    else {
+        readyToAdd = true
+    }
+});
