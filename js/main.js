@@ -1,13 +1,14 @@
 "use strict"
 
-//variables
+//----------------------- base variables -----------------------
 let todoItems = [];
 let newTodoInput;
 let saveButton = document.getElementById("newtodobutton");
 let todoList = document.getElementById("todolist");
 let clear = document.getElementById("clearbutton");
 
-//on button press function
+
+//----------------------- on button press function -----------------------
 saveButton.addEventListener("click", function(){
     //gets value of field
     newTodoInput = document.getElementById("newtodo").value;
@@ -23,7 +24,8 @@ saveButton.addEventListener("click", function(){
     location.reload();
 });
 
-//loads the todolist on load
+
+//----------------------- loads the todolist on load aswell as logic for removal -----------------------
 window.addEventListener("load", function() { 
 
     //gets list of items as a array, needs json parse since localstorage does not store arrays
@@ -40,10 +42,44 @@ window.addEventListener("load", function() {
         newTodoItem.innerHTML = todoItems[index];
         todoList.appendChild(newTodoItem);
     }
+    
 });
 
-//clear button
+
+//----------------------- clear button -----------------------
 clear.addEventListener("click", function(){
-    localStorage.clear();
-    location.reload();
+    //adds a warning so the list wont be unintentionaly deleted
+    if (confirm("are you sure you want to delete all the items?")) {
+        localStorage.clear();
+        location.reload();
+    }
+    else {
+        return;
+    }
 });
+
+
+//----------------------- removal of singular elements -----------------------
+
+//onload instead of an event listener, is there any point to not doing it this way? (keeping the other one as is since i dont know if this counts as an eventhandler)
+window.onload = function() {
+
+    //gets all articles
+    let articleArray = document.querySelectorAll("article");
+
+    //tracks the position of element for removal
+    let index = -1;
+
+    articleArray.forEach(function(item) {
+        index++;
+        let elementPosition =  index;
+
+        //adds event listener to each that removes itself (removes element from array that is at its current position)
+        item.addEventListener("click", function() {
+            todoItems.splice(elementPosition, 1);
+            console.log(todoItems);
+            localStorage.todoItemsList = JSON.stringify(todoItems);
+            location.reload();
+        });
+    });
+}
