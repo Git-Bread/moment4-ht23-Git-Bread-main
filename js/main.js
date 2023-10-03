@@ -1,7 +1,7 @@
 "use strict"
 
 //variables
-let todoItems = ["dwa", "nan"];
+let todoItems = [];
 let newTodoInput;
 let saveButton = document.getElementById("newtodobutton");
 let todoList = document.getElementById("todolist");
@@ -17,13 +17,23 @@ saveButton.addEventListener("click", function(){
         return;
     }
 
+    //adds value to localstorage
     todoItems.push(newTodoInput);
-    console.log(todoItems);
+    localStorage.todoItemsList = JSON.stringify(todoItems);
     location.reload();
 });
 
 //loads the todolist on load
 window.addEventListener("load", function() { 
+
+    //gets list of items as a array, needs json parse since localstorage does not store arrays
+    if(localStorage.getItem("todoItemsList")) {
+        todoItems = JSON.parse(localStorage.getItem("todoItemsList"));
+    }
+    else {
+        localStorage.setItem("todoItemsList", JSON.stringify(todoItems));
+    }
+
     //creates a article for every value in todoItems and inserts those under todo
     for (let index = 0; index < todoItems.length; index++) {
         let newTodoItem = document.createElement("article");
@@ -34,6 +44,6 @@ window.addEventListener("load", function() {
 
 //clear button
 clear.addEventListener("click", function(){
-    todoItems = [];
+    localStorage.clear();
     location.reload();
 });
